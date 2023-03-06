@@ -11,15 +11,15 @@ const ProductFeed = ({ products }) => {
         px='4'
         spacingX='30px'>
         {products.map(
-          ({ id, title, price, description, category, image }) => (
+          (product) => (
             <Product
-              key={id}
-              id={id}
-              title={title}
-              price={price}
-              description={description}
-              category={category}
-              image={image}
+              key={product.id} {...product}
+              // id={product.id}
+              // title={product.title}
+              // price={product.price}
+              // description={product.description}
+              // category={product.category}
+              // image={product.image}
             />
           )
         )}
