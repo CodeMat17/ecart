@@ -2,6 +2,7 @@ import { SimpleGrid, Text } from "@chakra-ui/react";
 import Product from "./Product";
 
 const ProductFeed = ({ products }) => {
+  console.log(products);
   return (
       <SimpleGrid
         maxW='6xl'
@@ -10,7 +11,7 @@ const ProductFeed = ({ products }) => {
         px='4'
         spacingX='30px'>
         {products.map(
-          ({ id, title, price, description, category, image, rating }) => (
+          ({ id, title, price, description, category, image }) => (
             <Product
               key={id}
               id={id}
@@ -19,7 +20,6 @@ const ProductFeed = ({ products }) => {
               description={description}
               category={category}
               image={image}
-              rating={rating}
             />
           )
         )}

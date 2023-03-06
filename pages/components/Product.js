@@ -10,7 +10,6 @@ const Product = ({
   description,
   category,
   image,
-  rating,
 }) => {
   const MAX_RATING = 5;
   const MIN_RATING = 2;
@@ -82,11 +81,7 @@ const Product = ({
       </Text>
       <Text fontWeight='semibold'>${price}</Text>
 
-      {/* {hasPrime && (
-        <Text fontSize='xs' color='gray.500'>
-          Free Delivery if you order NOW
-        </Text>
-      )} */}
+   
       <Text fontSize='xs' color='gray.500'>
         {hasPrimeStatus}
       </Text>
