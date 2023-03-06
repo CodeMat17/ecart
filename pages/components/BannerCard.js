@@ -5,8 +5,11 @@ const BannerCard = ({ banner }) => {
   return (
     <AspectRatio
       ratio={4 / 3}
+      maxWidth='full'
+      mx='auto'
       maxH='60vh'
-      mx={{ md: 1 }}
+      mr={{ md: 1 }}
+      ml={{ md: 1 }}
       rounded={{ md: "md" }}
       overflow='hidden'>
       <Image
