@@ -80,8 +80,6 @@ const Product = ({
         {description}
       </Text>
       <Text fontWeight='semibold'>${price}</Text>
-
-   
       <Text fontSize='xs' color='gray.500'>
         {hasPrimeStatus}
       </Text>
