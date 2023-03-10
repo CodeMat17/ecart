@@ -2,6 +2,8 @@ import { Box, Button, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../slices/cartSlice";
 
 const Product = ({
   id,
@@ -10,7 +12,10 @@ const Product = ({
   description,
   category,
   image,
+  rating,
 }) => {
+  const dispatch = useDispatch();
+
   const MAX_RATING = 5;
   const MIN_RATING = 2;
 
@@ -31,6 +36,20 @@ const Product = ({
       setHasPrimeStatus("");
     }
   }, []);
+
+  const addItemToCart = () => {
+    const product = {
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      ratings,
+      hasPrimeStatus,
+    };
+    dispatch(addToCart(product));
+  };
 
   return (
     <Box
@@ -84,6 +103,7 @@ const Product = ({
         {hasPrimeStatus}
       </Text>
       <Button
+        onClick={addItemToCart}
         w='full'
         mt='8'
         bgGradient='linear(to-b, yellow.200, yellow.400)'

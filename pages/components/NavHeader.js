@@ -1,3 +1,4 @@
+import { selectItems } from "@/slices/cartSlice";
 import {
   Box,
   Input,
@@ -5,11 +6,18 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { BiSearchAlt } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
 import { HiMenuAlt2 } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 const NavHeader = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const items = useSelector(selectItems);
+
   return (
     <Box
       as='nav'
@@ -27,7 +35,11 @@ const NavHeader = () => {
           gap='4'
           alignItems='center'
           justifyContent={{ base: "", md: "space-between" }}>
-          <BsCart4 size={48} />
+          <BsCart4
+            size={48}
+            cursor='pointer'
+            onClick={() => router.push("/")}
+          />
           <Box>
             <InputGroup display={{ base: "none", sm: "flex" }}>
               <Input maxW='sm' type='search' />
@@ -51,15 +63,18 @@ const NavHeader = () => {
           whiteSpace='nowrap'
           display='flex'
           gap='4'>
-          <Box>
-            <Text>Hellow, Matthew</Text>
-            <Text>Account and lists</Text>
+          <Box onClick={!session ? signIn : signOut} cursor='pointer'>
+            <Text>{session ? `Hello, ${session.user.name}` : `Sign In`}</Text>
+            <Text fontWeight='semibold'>Account and lists</Text>
           </Box>
           <Box>
             <Text>Returns</Text>
-            <Text> & Orders</Text>
+            <Text fontWeight='semibold'> & Orders</Text>
           </Box>
-          <Box pos='relative'>
+          <Box
+            pos='relative'
+            cursor='pointer'
+            onClick={() => router.push("/checkout")}>
             <BsCart4 size={25} />
             <Box
               pos='absolute'
@@ -74,7 +89,7 @@ const NavHeader = () => {
               rounded='full'
               px='1.5'
               py='.8'>
-              2
+              {items.length}
             </Box>
           </Box>
         </Box>
