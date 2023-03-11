@@ -1,21 +1,43 @@
 import { selectItems, selectTotal } from "@/slices/cartSlice";
 import { Box, Button, Text } from "@chakra-ui/react";
+import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useSession } from "next-auth/react";
 import { BsCart4 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import CheckoutProduct from "./components/CheckoutProduct";
 
 const Checkout = () => {
-  const session = useSession();
+  const { data: session } = useSession();
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
+
+  const config = {
+    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
+    tx_ref: Date.now(),
+    amount: total,
+    currency: "NGN",
+    payment_options: "card, mobilemoney, usssd",
+    redirect_url: "https://ecart-shopping.vercel.app/",
+    customer: {
+      email: session?.user.email,
+      name: session?.user.name,
+    },
+    customizations: {
+      title: "my Payment Title",
+      description: "Payment for items in cart",
+      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
 
   return (
     <Box bg='gray.100'>
       <Box maxW='6xl' mx='auto'>
-        {/* left side */}      
+        {/* left side */}
         <Box
-          pt='12' pb=''
+          pt='12'
+          pb=''
           display='flex'
           flexDir='column'
           alignItems='center'
@@ -42,7 +64,8 @@ const Checkout = () => {
           {/* Right side */}
           {items.length > 0 && (
             <Box w={{ base: "full", md: "50%" }} pr='4'>
-              <Text textAlign='center'
+              <Text
+                textAlign='center'
                 fontWeight='semibold'
                 fontSize='lg'
                 py='2'
@@ -52,6 +75,15 @@ const Checkout = () => {
               </Text>
               <Box my='6' display='flex' justifyContent='center'>
                 <Button
+                  onClick={() => {
+                    handleFlutterPayment({
+                      callback: (res) => {
+                        console.log(res);
+                        closePaymentModal();
+                      },
+                      onClose: () => {},
+                    });
+                  }}
                   ml={{ base: "4", md: "0" }}
                   bg={session.data === null ? "gray.500" : "blue.700"}
                   color='white'
