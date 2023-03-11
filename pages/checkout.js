@@ -2,7 +2,7 @@ import { selectItems, selectTotal } from "@/slices/cartSlice";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsCart4 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import CheckoutProduct from "./components/CheckoutProduct";
