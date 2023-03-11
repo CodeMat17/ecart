@@ -95,11 +95,11 @@ const Checkout = () => {
                     });
                   }}
                   ml={{ base: "4", md: "0" }}
-                  bg={session.data === null ? "gray.500" : "blue.700"}
+                  bg={!session ? "gray.500" : "blue.700"}
                   color='white'
-                  isDisabled={session.data === null}
+                  isDisabled={!session}
                   _hover={{ bg: "blue.900" }}>
-                  {session.data === null
+                  {!session
                     ? "Signin to checkout"
                     : "Proceed to checkout"}
                 </Button>
