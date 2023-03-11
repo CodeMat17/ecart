@@ -9,10 +9,17 @@ import CheckoutProduct from "./components/CheckoutProduct";
 
 const Checkout = () => {
   const { data: session } = useSession();
-  const [email, setEmail] = useState(session.user.email);
-  const [name, setName] = useState(session.user.name);
+  const [email, setEmail] = useState(null);
+  const [name, setName] = useState(null);
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
+
+  useEffect(() => {
+    if (session) {
+      setEmail(session.user.email);
+      setName(session.user.name);
+    }
+  });
 
   const config = {
     public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
