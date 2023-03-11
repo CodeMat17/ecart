@@ -2,12 +2,15 @@ import { selectItems, selectTotal } from "@/slices/cartSlice";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { BsCart4 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import CheckoutProduct from "./components/CheckoutProduct";
 
 const Checkout = () => {
   const { data: session } = useSession();
+  const [email, setEmail] = useState(session.user.email);
+  const [name, setName] = useState(session.user.name);
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
 
@@ -19,8 +22,8 @@ const Checkout = () => {
     payment_options: "card, mobilemoney, usssd",
     redirect_url: "https://ecart-shopping.vercel.app/",
     customer: {
-      email: session?.user.email,
-      name: session?.user.name,
+      email: email,
+      name: name,
     },
     customizations: {
       title: "my Payment Title",
