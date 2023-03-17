@@ -1,18 +1,21 @@
 import { selectItems, selectTotal } from "@/slices/cartSlice";
 import { Box, Button, Text } from "@chakra-ui/react";
-import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { BsCart4 } from "react-icons/bs";
+import { usePaystackPayment } from "react-paystack";
 import { useSelector } from "react-redux";
 import CheckoutProduct from "./components/CheckoutProduct";
+import {useRouter} from 'next/router'
 
 const Checkout = () => {
   const { data: session } = useSession();
+  const router = useRouter()
   const [email, setEmail] = useState(null);
   const [name, setName] = useState(null);
   const items = useSelector(selectItems);
   const total = useSelector(selectTotal);
+  const amount = Math.round(total);
 
   useEffect(() => {
     if (session) {
@@ -22,24 +25,38 @@ const Checkout = () => {
   });
 
   const config = {
-    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_KEY,
-    tx_ref: Date.now(),
-    amount: total,
-    currency: "NGN",
-    payment_options: "card, mobilemoney, usssd",
-    redirect_url: "https://ecart-shopping.vercel.app/",
-    customer: {
-      email: email,
-      name: name,
-    },
-    customizations: {
-      title: "my Payment Title",
-      description: "Payment for items in cart",
-      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
-    },
+    reference: new Date().getTime().toString(),
+    email: email,
+    amount: amount * 100,
+    publicKey: "pk_test_01fc1183b5664f5c293f2f729aa4c876f0bfffd6",
   };
 
-  const handleFlutterPayment = useFlutterwave(config);
+  const onSuccess = (reference) => {
+    console.log('....', reference.status);
+    console.log("onSuccess, DONE");
+    router.push('/')
+  };
+
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log("closed");
+  };
+
+  const PayStackHook = () => {
+    const initializePayment = usePaystackPayment(config);
+    return (
+        <Button
+          color='white'
+          bgGradient='linear(to-r, #08a4da, blue.400)'
+          boxShadow={`0 0 12px 1px #2a7aaf`}
+          _hover={{ boxShadow: `0 0 20px 3px #2a7aaf` }}
+          onClick={() => {
+            initializePayment(onSuccess, onClose);
+          }}>
+          Paystack Hook NGN {amount}
+        </Button>       
+    );
+  };
 
   return (
     <Box bg='gray.100'>
@@ -81,14 +98,17 @@ const Checkout = () => {
                 py='2'
                 px={{ base: 4, lg: "0" }}>
                 Subtotal - ({items.length} item{items.length > 1 ? "s" : ""}): $
-                {total}
+                {amount}
               </Text>
               <Box my='6' display='flex' justifyContent='center'>
-                <Button
+                {/* <Button
                   onClick={() => {
                     handleFlutterPayment({
-                      callback: (res) => {
-                        console.log(res);
+                      callback: (response) => {
+                        console.log(response);
+                        console.log("PAYMENT DONE");
+                        // console.log("checkout items", items.length);
+                        // console.log("checkout items", items);
                         closePaymentModal();
                       },
                       onClose: () => {},
@@ -99,10 +119,9 @@ const Checkout = () => {
                   color='white'
                   isDisabled={!session}
                   _hover={{ bg: "blue.900" }}>
-                  {!session
-                    ? "Signin to checkout"
-                    : "Proceed to checkout"}
-                </Button>
+                  {!session ? "Signin to checkout" : "Proceed to checkout"}
+                </Button> */}
+                <PayStackHook />
               </Box>
             </Box>
           )}

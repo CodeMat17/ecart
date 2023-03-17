@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Banner from "./components/Banner";
