@@ -1,7 +1,7 @@
 export default async function handle(req, res) {
-  if (req.query.secret !== process.env.NEXT_PUBLIC_VALIDATION_SECRET) {
-    res.status(401).json({ message: "Invalid secret" });
-  }
+//   if (req.query.secret !== process.env.NEXT_PUBLIC_VALIDATION_SECRET) {
+//     res.status(401).json({ message: "Invalid secret" });
+//   }
   if (req.method === "POST") {
     const event = req.body;
     // Process the Paystack event here
