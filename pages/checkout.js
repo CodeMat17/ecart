@@ -1,16 +1,16 @@
 import { selectItems, selectTotal } from "@/slices/cartSlice";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BsCart4 } from "react-icons/bs";
 import { usePaystackPayment } from "react-paystack";
 import { useSelector } from "react-redux";
 import CheckoutProduct from "./components/CheckoutProduct";
-import {useRouter} from 'next/router'
 
 const Checkout = () => {
   const { data: session } = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const [email, setEmail] = useState(null);
   const [name, setName] = useState(null);
   const items = useSelector(selectItems);
@@ -32,9 +32,10 @@ const Checkout = () => {
   };
 
   const onSuccess = (reference) => {
-    console.log('....', reference.status);
+    console.log("status", "reference");
+    // NEXT_PUBLIC_VALIDATION_SECRET
     console.log("onSuccess, DONE");
-    router.push('/')
+    router.push("/");
   };
 
   const onClose = () => {
@@ -45,16 +46,16 @@ const Checkout = () => {
   const PayStackHook = () => {
     const initializePayment = usePaystackPayment(config);
     return (
-        <Button
-          color='white'
-          bgGradient='linear(to-r, #08a4da, blue.400)'
-          boxShadow={`0 0 12px 1px #2a7aaf`}
-          _hover={{ boxShadow: `0 0 20px 3px #2a7aaf` }}
-          onClick={() => {
-            initializePayment(onSuccess, onClose);
-          }}>
-          Paystack Hook NGN {amount}
-        </Button>       
+      <Button
+        color='white'
+        bgGradient='linear(to-r, #08a4da, blue.400)'
+        boxShadow={`0 0 12px 1px #2a7aaf`}
+        _hover={{ boxShadow: `0 0 20px 3px #2a7aaf` }}
+        onClick={() => {
+          initializePayment(onSuccess, onClose);
+        }}>
+        Paystack Hook NGN {amount}
+      </Button>
     );
   };
 
